@@ -1,51 +1,52 @@
-import React from 'react'
+import React, {useState} from 'react'
 import ReactDOM from 'react-dom'
 
-const Header = (props) => {
-    return (
-        <p>{props.course.name}</p>
-    )
+
+
+const Button = (props) => {
+  
+  return(
+    <button onClick={props.handleClick}>
+      {props.text}
+    </button>          
+  )
 }
 
-const Content = (props) => {
+const History = ({allClicks}) => {
+  if(allClicks.length === 0){
     return(
-        <p>{props.parts.name} {props.parts.exercises}</p>
+      <div>Press a button to start recording</div>
     )
-}
-const Total = (props) => {
-    return(
-        <p>Number of exercises {props.parts[0].exercises+props.parts[1].exercises+props.parts[2].exercises}</p>
-    )
-
+  }
+  return(
+    <div>Button press history: {allClicks.join(' ')}</div>
+  )
 }
 
 const App = () => {
-  const course = {
-      name:'Half Stack application development',
-      parts: [
-        {
-          name: 'Fundamentals of React',
-          exercises: 10
-        },
-        {
-          name: 'Using props to pass data',
-          exercises: 7
-        },
-        {
-          name: 'State of a component',
-          exercises: 14
-        }
-      ]
-    }
+  const [clicks,setClicks] = useState({left:0,right:0})
+  const [allClicks,setAll] = useState([])
+
+  const incLeft = () => {
+    setClicks({...clicks,left: clicks.left+1})
+    setAll(allClicks.concat('L'))
+  }
+  const incRight = () => {
+    setClicks({...clicks,right: clicks.right+1})
+    setAll(allClicks.concat('R'))
+  }
+
   return (
     <div>
-      <Header course={course}/>
-      <Content parts={course.parts[0]}/>      
-      <Content parts={course.parts[1]}/>            
-      <Content parts={course.parts[2]}/>      
-      <Total parts={course.parts}/>
+      {clicks.left}
+      <Button handleClick={incLeft} text="left"/>
+      <Button handleClick={incRight} text="right"/>
+      {clicks.right}
+      <History allClicks={allClicks}/>
     </div>
   )
 }
 
-ReactDOM.render(<App />, document.getElementById('root'))
+
+ReactDOM.render(<App />, 
+document.getElementById('root'))
